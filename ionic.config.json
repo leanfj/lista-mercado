@@ -1,0 +1,7 @@
+{
+  "name": "lista-mercado",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
