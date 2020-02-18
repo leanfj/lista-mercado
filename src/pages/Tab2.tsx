@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from "react";
 import {
   IonContent,
   IonHeader,
@@ -8,10 +8,16 @@ import {
   IonPage,
   IonTitle,
   IonToolbar
-} from '@ionic/react';
-import { useStorage } from '@ionic/react-hooks/storage';
+} from "@ionic/react";
 
+export interface Item {
+  itemName: string;
+  itemWeigth: string;
+  itemPrice: string;
+  itemValue: number;
+}
 const Tab2: React.FC = () => {
+  
   return (
     <IonPage>
       <IonHeader>
