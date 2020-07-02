@@ -16,7 +16,7 @@ import {
   IonFabButton,
   IonAlert,
   IonToast,
-  IonGrid
+  IonGrid,
 } from "@ionic/react";
 
 import { trash, add, logoUsd, closeCircle, save } from "ionicons/icons";
@@ -76,18 +76,18 @@ const Tab1: React.FC = () => {
             {
               name: "itemName",
               type: "text",
-              placeholder: "Nome do Item"
+              placeholder: "Nome do Item",
             },
             {
               name: "itemWeigth",
               type: "number",
-              placeholder: "Peso ou Unidade"
+              placeholder: "Peso ou Unidade",
             },
             {
               name: "itemPrice",
               type: "number",
-              placeholder: "Valor do Item"
-            }
+              placeholder: "Valor do Item",
+            },
           ]}
           buttons={[
             {
@@ -95,11 +95,11 @@ const Tab1: React.FC = () => {
               role: "cancel",
               handler: () => {
                 setShowCadNewItem(false);
-              }
+              },
             },
             {
               text: "Ok",
-              handler: async e => {
+              handler: async (e) => {
                 console.log(e);
                 if (e.itemName && e.itemWeigth && e.itemPrice) {
                   const itemVal = Number(e.itemWeigth) * Number(e.itemPrice);
@@ -116,8 +116,8 @@ const Tab1: React.FC = () => {
                   return;
                 }
                 setShowToastError(true);
-              }
-            }
+              },
+            },
           ]}
         />
         <IonCard>
@@ -175,11 +175,11 @@ const Tab1: React.FC = () => {
           </IonRow>
         </IonCard>
         <IonGrid>
-          <IonRow >
+          <IonRow>
             <IonCol size="9">
               <IonButton color="primary" expand="full">
                 <IonIcon slot="start" icon={logoUsd} />
-                {totalValue.toFixed(2)}
+                {totalValue}
               </IonButton>
             </IonCol>
             <IonCol>
@@ -193,10 +193,9 @@ const Tab1: React.FC = () => {
                       JSON.stringify(itemList)
                     );
                   } else {
-                    setShowToastSaveError(true)
-                    return
+                    setShowToastSaveError(true);
+                    return;
                   }
-
                 }}
               >
                 <IonIcon icon={save} />

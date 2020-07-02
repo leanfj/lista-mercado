@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect, Route } from 'react-router-dom';
+import {Redirect, Route} from 'react-router-dom';
 import {
   IonApp,
   IonIcon,
@@ -9,8 +9,8 @@ import {
   IonTabButton,
   IonTabs
 } from '@ionic/react';
-import { IonReactRouter } from '@ionic/react-router';
-import { apps, flash } from 'ionicons/icons';
+import {IonReactRouter} from '@ionic/react-router';
+import {apps, flash} from 'ionicons/icons';
 import Tab1 from './pages/Tab1';
 import Tab2 from './pages/Tab2';
 
@@ -38,9 +38,9 @@ const App: React.FC = () => (
     <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet>
-          <Route path="/tab1" component={Tab1} exact={true} />
-          <Route path="/tab2" component={Tab2} exact={true} />
-          <Route path="/" render={() => <Redirect to="/tab1" />} exact={true} />
+          <Route path="/tab1" component={Tab1} />
+          <Route path="/tab2" component={Tab2} />
+          <Redirect exact from="/" to="/tab1" />
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
           <IonTabButton tab="tab1" href="/tab1">

@@ -9,15 +9,13 @@ import {
   IonTitle,
   IonToolbar
 } from "@ionic/react";
+import {useStorage} from "@ionic/react-hooks/storage";
 
-export interface Item {
-  itemName: string;
-  itemWeigth: string;
-  itemPrice: string;
-  itemValue: number;
-}
 const Tab2: React.FC = () => {
-  
+
+  const {} = useStorage()
+
+
   return (
     <IonPage>
       <IonHeader>
