@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   IonContent,
   IonHeader,
@@ -9,12 +9,26 @@ import {
   IonTitle,
   IonToolbar
 } from "@ionic/react";
-import {useStorage} from "@ionic/react-hooks/storage";
+import { useStorage } from "@ionic/react-hooks/storage";
 
 const Tab2: React.FC = () => {
 
-  const {} = useStorage()
+  const [list, setList] = useState<string[]>([]);
 
+  const { get, getKeys } = useStorage()
+
+  useEffect(() => {
+    const loadMainList = async () => {
+      const listasString = await getKeys();
+      const removeMainList = listasString.keys.filter((item) => item !== "mainlist")
+
+      console.log(removeMainList)
+      setList(removeMainList)
+
+    };
+
+    loadMainList();
+  }, [get]);
 
   return (
     <IonPage>
@@ -25,12 +39,14 @@ const Tab2: React.FC = () => {
       </IonHeader>
       <IonContent>
         <IonList>
-          <IonItem routerLink="/">
-            <IonLabel>
-              <h2>Lista 01</h2>
-              <span>01/01/2020</span>
-            </IonLabel>
-          </IonItem>
+          {list.map((item, index) => (
+            <IonItem routerLink="/" key={`${index}`}>
+              <IonLabel>
+                <h2>{`${item.substring(0, 9).toUpperCase()}`}</h2>
+                <span>{`${new Date(Number(item.substring(10))).toLocaleDateString('pt-BR')}`}</span>
+              </IonLabel>
+            </IonItem>
+          ))}
         </IonList>
       </IonContent>
     </IonPage>
