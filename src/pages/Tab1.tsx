@@ -151,7 +151,7 @@ const Tab1: React.FC = () => {
                     <strong>R$</strong>
                     {item.itemPrice}
                     <span>V. Tot. - </span>
-                    <strong>R$</strong> {item.itemValue}
+                    <strong>R$</strong> {item.itemValue.toFixed(2)}
                   </IonRow>
                 </IonLabel>
               </IonItem>
@@ -179,7 +179,7 @@ const Tab1: React.FC = () => {
             <IonCol size="9">
               <IonButton color="primary" expand="full">
                 <IonIcon slot="start" icon={logoUsd} />
-                {totalValue}
+                {totalValue.toFixed(2)}
               </IonButton>
             </IonCol>
             <IonCol>
