@@ -32,8 +32,12 @@ export interface Item {
   itemValue: number;
 }
 
+interface ListDetailsPageProps extends RouteComponentProps<{
+  id: string;
+}> {}
 
-const Tab1: React.FC = () => {
+
+const List: React.FC<ListDetailsPageProps> = ({match}) => {
   const [showCadNewItem, setShowCadNewItem] = useState(false);
   const [itemList, setItemList] = useState<Item[]>([]);
   const [totalValue, settotalValue] = useState(0);
@@ -43,15 +47,27 @@ const Tab1: React.FC = () => {
   const [showToastSaveSuccess, setShowToastSaveSuccess] = useState(false);
 
 
-  const { get, set, remove } = useStorage();
+  const { get, set, remove, getKeys } = useStorage();
 
   useEffect(() => {
     const loadMainList = async () => {
-      const listaString = await get("mainlist");
+
+      const listasString = await getKeys();
+      const removeMainList = listasString.keys.filter((item) => item !== "mainlist")
+
+      const filteredList = removeMainList.filter((item, index) => {
+        if (index == Number(match.params.id)) {
+          return item
+        }
+      })
+
+      const listaString = await get(filteredList[0]);
+
       const lista = listaString ? JSON.parse(listaString) : [];
 
-      setItemList(lista);
-      const listValue = lista.reduce((acc: any, curr: any) => {
+      setItemList(lista.items);
+
+      const listValue = lista.items.reduce((acc: any, curr: any) => {
         return acc + curr.itemValue;
       }, 0);
       settotalValue(listValue);
@@ -63,7 +79,7 @@ const Tab1: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Lista Mercado</IonTitle>
+          <IonTitle>Lista Mercado {`${match.params.id}`}</IonTitle>
         </IonToolbar>
         <IonFab vertical="top" horizontal="end" slot="fixed">
           <IonFabButton onClick={() => setShowCadNewItem(true)}>
@@ -139,7 +155,7 @@ const Tab1: React.FC = () => {
                         const lista = listaString
                           ? JSON.parse(listaString)
                           : [];
-                        const itemToRemove = lista.splice(index, 1);
+                        const itemToRemove = lista.items.splice(index, 1);
                         set("mainlist", JSON.stringify(lista));
                         setItemList(lista);
                         settotalValue(totalValue - itemToRemove[0].itemValue);
@@ -246,4 +262,4 @@ const Tab1: React.FC = () => {
   );
 };
 
-export default Tab1;
+export default List;

@@ -13,7 +13,7 @@ import { useStorage } from "@ionic/react-hooks/storage";
 
 const Tab2: React.FC = () => {
 
-  const [list, setList] = useState<string[]>([]);
+  const [lists, setLists] = useState<string[]>([]);
 
   const { get, getKeys } = useStorage()
 
@@ -22,8 +22,7 @@ const Tab2: React.FC = () => {
       const listasString = await getKeys();
       const removeMainList = listasString.keys.filter((item) => item !== "mainlist")
 
-      console.log(removeMainList)
-      setList(removeMainList)
+      setLists(removeMainList)
 
     };
 
@@ -39,11 +38,11 @@ const Tab2: React.FC = () => {
       </IonHeader>
       <IonContent>
         <IonList>
-          {list.map((item, index) => (
-            <IonItem routerLink="/" key={`${index}`}>
+          {lists.map((item, index) => (
+            <IonItem routerLink={`list/${index}`} key={`${index}`}>
               <IonLabel>
                 <h2>{`${item.substring(0, 9).toUpperCase()}`}</h2>
-                <span>{`${new Date(Number(item.substring(10))).toLocaleDateString('pt-BR')}`}</span>
+                <span>{`${new Date(Number(item.substring(10))).toLocaleString('pt-BR')}`}</span>
               </IonLabel>
             </IonItem>
           ))}
