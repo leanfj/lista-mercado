@@ -1,5 +1,5 @@
 import React from 'react';
-import {Redirect, Route, RouteComponentProps} from 'react-router-dom';
+import {Redirect, Route} from 'react-router-dom';
 import {
   IonApp,
   IonIcon,
@@ -10,7 +10,7 @@ import {
   IonTabs
 } from '@ionic/react';
 import {IonReactRouter} from '@ionic/react-router';
-import {apps, flash} from 'ionicons/icons';
+import {apps, flash, cog } from 'ionicons/icons';
 import Tab1 from './pages/Tab1';
 import Tab2 from './pages/Tab2';
 import List from './pages/List';
@@ -33,6 +33,7 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import Tab3 from './pages/Tab3';
 
 
 
@@ -42,8 +43,9 @@ const App: React.FC = () => (
       <IonTabs>
         <IonRouterOutlet>
           <Route path="/tab1" component={Tab1} />
-          <Route path="/list/:id" component={List} />
           <Route path="/tab2" component={Tab2} />
+          <Route path="/tab3" component={Tab3} />
+          <Route path="/list/:id" component={List} />
           <Redirect exact from="/" to="/tab1" />
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
@@ -54,6 +56,10 @@ const App: React.FC = () => (
           <IonTabButton tab="tab2" href="/tab2">
             <IonIcon icon={apps} />
             <IonLabel>Listas Salvas</IonLabel>
+          </IonTabButton>
+          <IonTabButton tab="tab3" href="/tab3">
+            <IonIcon icon={cog} />
+            <IonLabel>Configurações</IonLabel>
           </IonTabButton>
         </IonTabBar>
       </IonTabs>
