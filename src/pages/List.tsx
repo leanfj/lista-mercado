@@ -12,14 +12,14 @@ import {
   IonList,
   IonLabel,
   IonItem,
-  IonFab,
-  IonFabButton,
-  IonAlert,
-  IonToast,
   IonGrid,
+  IonButtons,
+  IonBackButton,
+  IonText,
+  IonCardTitle
 } from "@ionic/react";
 
-import { trash, add, logoUsd, closeCircle, save } from "ionicons/icons";
+import { trash, logoUsd } from "ionicons/icons";
 import { useStorage } from "@ionic/react-hooks/storage";
 import React, { useState, useEffect } from "react";
 import "./Tab1.css";
@@ -34,25 +34,21 @@ export interface Item {
 
 interface ListDetailsPageProps extends RouteComponentProps<{
   id: string;
-}> {}
+}> { }
 
-
-const List: React.FC<ListDetailsPageProps> = ({match}) => {
-  const [showCadNewItem, setShowCadNewItem] = useState(false);
+const List: React.FC<ListDetailsPageProps> = ({ match, history }) => {
   const [itemList, setItemList] = useState<Item[]>([]);
+  const [listName, setListName] = useState("");
+  const [listCreatedAt, setListCreateAt] = useState("");
   const [totalValue, settotalValue] = useState(0);
-  const [showToast, setShowToast] = useState(false);
-  const [showToastError, setShowToastError] = useState(false);
-  const [showToastSaveError, setShowToastSaveError] = useState(false);
-  const [showToastSaveSuccess, setShowToastSaveSuccess] = useState(false);
-
-
-  const { get, set, remove, getKeys } = useStorage();
+  const { get, remove, getKeys } = useStorage();
 
   useEffect(() => {
+
     const loadMainList = async () => {
 
       const listasString = await getKeys();
+
       const removeMainList = listasString.keys.filter((item) => item !== "mainlist")
 
       const filteredList = removeMainList.filter((item, index) => {
@@ -60,17 +56,22 @@ const List: React.FC<ListDetailsPageProps> = ({match}) => {
           return item
         }
       })
+      
+      setListName(filteredList[0])
 
       const listaString = await get(filteredList[0]);
 
-      const lista = listaString ? JSON.parse(listaString) : [];
+      const lista = listaString ? JSON.parse(listaString) : {};
 
       setItemList(lista.items);
+      setListCreateAt(lista.createdAt);
 
       const listValue = lista.items.reduce((acc: any, curr: any) => {
         return acc + curr.itemValue;
       }, 0);
+
       settotalValue(listValue);
+
     };
     loadMainList();
   }, [get]);
@@ -79,90 +80,25 @@ const List: React.FC<ListDetailsPageProps> = ({match}) => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Lista Mercado {`${match.params.id}`}</IonTitle>
+          <IonButtons slot="start">
+            <IonBackButton defaultHref="/tab2" />
+          </IonButtons>
         </IonToolbar>
-        <IonFab vertical="top" horizontal="end" slot="fixed">
-          <IonFabButton onClick={() => setShowCadNewItem(true)}>
-            <IonIcon icon={add} />
-          </IonFabButton>
-        </IonFab>
       </IonHeader>
       <IonContent>
-        <IonAlert
-          isOpen={showCadNewItem}
-          onDidDismiss={() => setShowCadNewItem(false)}
-          header={"Novo Item"}
-          inputs={[
-            {
-              name: "itemName",
-              type: "text",
-              placeholder: "Nome do Item",
-            },
-            {
-              name: "itemWeigth",
-              type: "number",
-              placeholder: "Peso ou Unidade",
-            },
-            {
-              name: "itemPrice",
-              type: "number",
-              placeholder: "Valor do Item",
-            },
-          ]}
-          buttons={[
-            {
-              text: "Cancelar",
-              role: "cancel",
-              handler: () => {
-                setShowCadNewItem(false);
-              },
-            },
-            {
-              text: "Ok",
-              handler: async (e) => {
-                console.log(e);
-                if (e.itemName && e.itemWeigth && e.itemPrice) {
-                  const itemVal = Number(e.itemWeigth) * Number(e.itemPrice);
-                  const itemValue = Number(itemVal.toFixed(2));
-                  const newItems = [{ ...e, itemValue }, ...itemList];
-                  setItemList(newItems);
-
-                  settotalValue(totalValue + itemValue);
-
-                  setShowToast(true);
-
-                  set("mainlist", JSON.stringify(newItems));
-
-                  return;
-                }
-                setShowToastError(true);
-              },
-            },
-          ]}
-        />
         <IonCard>
+          <IonCardTitle style={{ textAlign: 'center', fontSize: 20, padding: 20 }}>
+            {`
+                Lista Mercado
+                ${new Date(listCreatedAt).toLocaleString('pt-BR')}
+            `}
+          </IonCardTitle>
           <IonList>
             {itemList.map((item, index) => (
               <IonItem key={`${index}`}>
                 <IonLabel>
                   <IonRow className="ion-justify-content-between ion-align-items-center">
                     <h2>{item.itemName}</h2>
-                    <IonButton
-                      color="danger"
-                      size="small"
-                      onClick={async () => {
-                        const listaString = await get("mainlist");
-                        const lista = listaString
-                          ? JSON.parse(listaString)
-                          : [];
-                        const itemToRemove = lista.items.splice(index, 1);
-                        set("mainlist", JSON.stringify(lista));
-                        setItemList(lista);
-                        settotalValue(totalValue - itemToRemove[0].itemValue);
-                      }}
-                    >
-                      <IonIcon icon={closeCircle} />
-                    </IonButton>
                   </IonRow>
                   <IonRow className="ion-justify-content-around itemDetails">
                     <span>Quant./Kg - </span>
@@ -182,81 +118,28 @@ const List: React.FC<ListDetailsPageProps> = ({match}) => {
               <IonButton
                 color="danger"
                 expand="block"
-                onClick={() => {
-                  setItemList([]);
-                  settotalValue(0);
-                  remove("mainlist");
+                onClick={async (e) => {
+                  e.preventDefault()
+                  remove(listName)
+                  history.push('/tab1')
                 }}
               >
                 <IonIcon slot="end" icon={trash} />
-                Limpar Lista
+                Deletar Lista
               </IonButton>
             </IonCol>
           </IonRow>
         </IonCard>
         <IonGrid>
           <IonRow>
-            <IonCol size="9">
+            <IonCol >
               <IonButton color="primary" expand="full">
                 <IonIcon slot="start" icon={logoUsd} />
                 {totalValue.toFixed(2)}
               </IonButton>
             </IonCol>
-            <IonCol>
-              <IonButton
-                color="success"
-                expand="full"
-                onClick={async () => {
-                  const listToSave = {
-                    items: itemList,
-                    createdAt: new Date().getTime(),
-                  }
-
-                  if (listToSave.items) {
-                    await set(
-                      `savedlist-${listToSave.createdAt}`,
-                      JSON.stringify(listToSave)
-                    );
-                    setShowToastSaveSuccess(true);
-                  } else {
-                    setShowToastSaveError(true);
-                    return;
-                  }
-                }}
-              >
-                <IonIcon icon={save} />
-              </IonButton>
-            </IonCol>
           </IonRow>
         </IonGrid>
-
-        <IonToast
-          isOpen={showToast}
-          onDidDismiss={() => setShowToast(false)}
-          message="Item incluído com SUCESSO"
-          duration={200}
-        />
-        <IonToast
-          isOpen={showToastError}
-          onDidDismiss={() => setShowToastError(false)}
-          message="Informe todos os DADOS"
-          duration={500}
-          color="danger"
-        />
-        <IonToast
-          isOpen={showToastSaveSuccess}
-          onDidDismiss={() => setShowToastSaveSuccess(false)}
-          message="Lista Salva com Sucesso"
-          duration={500}
-          color="success"
-        />
-        <IonToast
-          isOpen={showToastSaveError}
-          onDidDismiss={() => setShowToastSaveError(false)}
-          message="Sua lista esta VAZIA"
-          duration={500}
-          color="danger"
-        />
       </IonContent>
     </IonPage>
   );

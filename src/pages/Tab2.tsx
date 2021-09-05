@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   IonContent,
   IonHeader,
@@ -7,7 +7,8 @@ import {
   IonList,
   IonPage,
   IonTitle,
-  IonToolbar
+  IonToolbar,
+  useIonViewDidEnter
 } from "@ionic/react";
 import { useStorage } from "@ionic/react-hooks/storage";
 
@@ -17,17 +18,25 @@ const Tab2: React.FC = () => {
 
   const { get, getKeys } = useStorage()
 
-  useEffect(() => {
+  useIonViewDidEnter(() => {
     const loadMainList = async () => {
       const listasString = await getKeys();
       const removeMainList = listasString.keys.filter((item) => item !== "mainlist")
+      const removeEmpytList = removeMainList.filter(async (item) => {
+        const list: any = await get(item)
 
-      setLists(removeMainList)
+        const parsedList = JSON.parse(list)
+        if (parsedList.length !== 0) {
+          return item;
+        }
+      })
+
+      setLists(removeEmpytList)
 
     };
 
     loadMainList();
-  }, [get]);
+  });
 
   return (
     <IonPage>

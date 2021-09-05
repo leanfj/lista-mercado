@@ -196,7 +196,7 @@ const Tab1: React.FC = () => {
                     createdAt: new Date().getTime(),
                   }
 
-                  if (listToSave.items) {
+                  if (listToSave.items.length) {
                     await set(
                       `savedlist-${listToSave.createdAt}`,
                       JSON.stringify(listToSave)
