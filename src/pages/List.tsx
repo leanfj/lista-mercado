@@ -17,11 +17,12 @@ import {
   IonCardTitle
 } from "@ionic/react";
 
-import { trash, logoUsd } from "ionicons/icons";
+import { trash } from "ionicons/icons";
 import { useStorage } from "@ionic/react-hooks/storage";
 import React, { useState, useEffect } from "react";
 import "./Tab1.css";
 import { RouteComponentProps } from "react-router";
+import { formatCurrency } from "../utils/currency";
 
 export interface Item {
   itemName: string;
@@ -49,14 +50,8 @@ const List: React.FC<ListDetailsPageProps> = ({ match, history }) => {
 
       const removeMainList = listasString.keys.filter((item) => item !== "mainlist")
 
-      const filteredList = removeMainList.filter((item, index) => {
-        if (index === Number(match.params.id)) {
-          return item
-        }
+      const filteredList = removeMainList.filter((item, index) => index === Number(match.params.id))
 
-        return [];
-      })
-      
       setListName(filteredList[0])
 
       const listaString = await get(filteredList[0]);
@@ -104,10 +99,9 @@ const List: React.FC<ListDetailsPageProps> = ({ match, history }) => {
                     <span>Quant./Kg - </span>
                     {item.itemWeigth}
                     <span>V. Un. - </span>
-                    <strong>R$</strong>
-                    {item.itemPrice}
+                    {formatCurrency(item.itemPrice)}
                     <span>V. Tot. - </span>
-                    <strong>R$</strong> {item.itemValue.toFixed(2)}
+                    {formatCurrency(item.itemValue.toFixed(2))}
                   </IonRow>
                 </IonLabel>
               </IonItem>
@@ -134,8 +128,7 @@ const List: React.FC<ListDetailsPageProps> = ({ match, history }) => {
           <IonRow>
             <IonCol >
               <IonButton color="primary" expand="full">
-                <IonIcon slot="start" icon={logoUsd} />
-                {totalValue.toFixed(2)}
+                {formatCurrency(totalValue.toFixed(2))}
               </IonButton>
             </IonCol>
           </IonRow>

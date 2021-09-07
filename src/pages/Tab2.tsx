@@ -16,22 +16,15 @@ const Tab2: React.FC = () => {
 
   const [lists, setLists] = useState<string[]>([]);
 
-  const { get, getKeys } = useStorage()
+  const { getKeys } = useStorage()
 
   useIonViewDidEnter(() => {
     const loadMainList = async () => {
       const listasString = await getKeys();
-      const removeMainList = listasString.keys.filter((item) => (item !== "mainlist" && item !== "darkModeStatus"))
-      const removeEmpytList = removeMainList.filter(async (item) => {
-        const list: any = await get(item)
 
-        const parsedList = JSON.parse(list)
-        if (parsedList.length !== 0) {
-          return item;
-        }
-      })
+      const removeMainList = listasString.keys.filter((item) => (item !== "mainlist"))
 
-      setLists(removeEmpytList)
+      setLists(removeMainList)
 
     };
 

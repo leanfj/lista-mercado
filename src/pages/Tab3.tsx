@@ -23,11 +23,10 @@ interface ConfigPageProps extends RouteComponentProps<{
 
 const Tab3: React.FC<ConfigPageProps> = () => {
   const [showToastDeleteData, setShowToastDeleteData] = useState(false)
-  const { clear, set } = useStorage()
+  const { clear } = useStorage()
 
   const onToggle = (e: any) => {
     document.body.classList.toggle('dark', e.detail.checked)
-    set('darkModeStatus', e.detail.checked)
   }
 
   return (

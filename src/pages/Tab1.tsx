@@ -19,7 +19,7 @@ import {
   IonGrid,
 } from "@ionic/react";
 
-import { trash, add, logoUsd, closeCircle, save } from "ionicons/icons";
+import { trash, add, closeCircle, save } from "ionicons/icons";
 import { useStorage } from "@ionic/react-hooks/storage";
 import React, { useState, useEffect, useCallback } from "react";
 import "./Tab1.css";
@@ -217,8 +217,7 @@ const Tab1: React.FC = () => {
           <IonRow>
             <IonCol size="9">
               <IonButton color="primary" expand="full">
-                <IonIcon slot="start" icon={logoUsd} />
-                {totalValue.toFixed(2)}
+                {formatCurrency(totalValue.toFixed(2))}
               </IonButton>
             </IonCol>
             <IonCol>
