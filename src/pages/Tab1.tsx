@@ -46,6 +46,12 @@ const Tab1: React.FC = () => {
   const { get, set, remove } = useStorage();
 
   useEffect(() => {
+    get('darkModeStatus').then(
+      (data: any) => {
+        document.body.classList.toggle('dark', data);
+      }
+    )
+    
     const loadMainList = async () => {
       const listaString = await get("mainlist");
       const lista = listaString ? JSON.parse(listaString) : [];
@@ -72,7 +78,6 @@ const Tab1: React.FC = () => {
     []
   );
 
-
   return (
     <IonPage>
       <IonHeader>
@@ -86,7 +91,6 @@ const Tab1: React.FC = () => {
         </IonFabButton>
       </IonFab>
       <IonContent>
-        
         <IonAlert
           isOpen={showCadNewItem}
           onDidDismiss={() => setShowCadNewItem(false)}
