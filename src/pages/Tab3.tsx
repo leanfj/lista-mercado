@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   IonButton,
   IonCard,
@@ -13,7 +13,6 @@ import {
   IonToast,
   IonToggle,
   IonToolbar,
-  useIonViewDidEnter,
 } from "@ionic/react";
 import { useStorage } from "@ionic/react-hooks/storage";
 import { bug, trash } from "ionicons/icons";
@@ -24,25 +23,12 @@ interface ConfigPageProps extends RouteComponentProps<{
 
 const Tab3: React.FC<ConfigPageProps> = () => {
   const [showToastDeleteData, setShowToastDeleteData] = useState(false)
-  const [darkModeStatus, setDarkModeStatus] = useState(false)
-  const { clear, set, get } = useStorage()
+  const { clear, set } = useStorage()
 
   const onToggle = (e: any) => {
     document.body.classList.toggle('dark', e.detail.checked)
     set('darkModeStatus', e.detail.checked)
-    setDarkModeStatus(e.detail.checked)
   }
-
-  useIonViewDidEnter(() => {
-    const onPageLoad = () => {
-      get('darkModeStatus').then(
-        (data: any) => {
-          setDarkModeStatus(data)
-        }
-      )
-    }
-    onPageLoad()
-  });
 
   return (
     <IonPage>
@@ -59,9 +45,9 @@ const Tab3: React.FC<ConfigPageProps> = () => {
             <a style={{ fontSize: 18 }} href="https://github.com/leanfj" rel="noreferrer noopener" target="_blank">Leandro Ferreira</a>
           </IonText>
 
-          <IonItem style={{marginTop: 20}}>
+          <IonItem style={{ marginTop: 20 }}>
             <IonLabel>Dark Mode</IonLabel>
-            <IonToggle value="darkMode" onIonChange={onToggle} checked={darkModeStatus}/>
+            <IonToggle value="darkMode" onIonChange={onToggle} />
           </IonItem>
 
           <a href="https://github.com/leanfj/lista-mercado/issues/new" rel="noreferrer noopener" target="_blank">
@@ -74,7 +60,7 @@ const Tab3: React.FC<ConfigPageProps> = () => {
               <IonIcon slot="end" icon={bug} />
             </IonButton>
           </a>
-          
+
           <IonButton
             style={{ margin: 20 }}
             color="danger"
