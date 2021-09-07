@@ -21,7 +21,12 @@ const Tab2: React.FC = () => {
   useIonViewDidEnter(() => {
     const loadMainList = async () => {
       const listasString = await getKeys();
-      const removeMainList = listasString.keys.filter((item) => item !== "mainlist")
+      const removeMainList = listasString.keys.filter((item) => {
+        if (item !== "mainlist" && item !== "darkModeStatus") {
+          return item
+        }
+        
+      })
       const removeEmpytList = removeMainList.filter(async (item) => {
         const list: any = await get(item)
 
