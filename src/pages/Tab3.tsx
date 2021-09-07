@@ -6,8 +6,6 @@ import {
   IonHeader,
   IonIcon,
   IonPage,
-  IonRefresher,
-  IonRefresherContent,
   IonText,
   IonTitle,
   IonToast,
@@ -61,7 +59,7 @@ const Tab3: React.FC<ConfigPageProps> = () => {
             }}
           >
             <IonIcon slot="end" icon={trash} />
-            Deleter Dados
+            Deletar Dados
           </IonButton>
         </IonCard>
         <IonToast

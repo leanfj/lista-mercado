@@ -21,9 +21,9 @@ import {
 
 import { trash, add, logoUsd, closeCircle, save } from "ionicons/icons";
 import { useStorage } from "@ionic/react-hooks/storage";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./Tab1.css";
-import { RouteComponentProps } from "react-router";
+import { formatCurrency } from "../utils/currency";
 
 export interface Item {
   itemName: string;
@@ -59,19 +59,34 @@ const Tab1: React.FC = () => {
     loadMainList();
   }, [get]);
 
+  const handleChange = useCallback(
+    (e) => {
+
+      let value = e.target.value
+      value = value.replace(/\D/g, "");
+      value = value.replace(/(\d)(\d{2})$/, "$1,$2");
+      value = value.replace(/(?=(\d{3})+(\D))\B/g, ".")
+      e.target.value = value
+
+    },
+    []
+  );
+
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
           <IonTitle>Lista Mercado</IonTitle>
         </IonToolbar>
-        <IonFab vertical="top" horizontal="end" slot="fixed">
-          <IonFabButton onClick={() => setShowCadNewItem(true)}>
-            <IonIcon icon={add} />
-          </IonFabButton>
-        </IonFab>
       </IonHeader>
+      <IonFab vertical="top" horizontal="end" slot="fixed">
+        <IonFabButton onClick={() => setShowCadNewItem(true)}>
+          <IonIcon icon={add} />
+        </IonFabButton>
+      </IonFab>
       <IonContent>
+        
         <IonAlert
           isOpen={showCadNewItem}
           onDidDismiss={() => setShowCadNewItem(false)}
@@ -81,16 +96,30 @@ const Tab1: React.FC = () => {
               name: "itemName",
               type: "text",
               placeholder: "Nome do Item",
+              attributes: {
+                name: "itemName",
+                tabIndex: 1
+              }
             },
             {
               name: "itemWeigth",
               type: "number",
               placeholder: "Peso ou Unidade",
+              handler: () => console.log('peso'),
+              attributes: {
+                inputMode: 'decimal',
+                tabIndex: 2
+              }
             },
             {
               name: "itemPrice",
-              type: "number",
+              type: "text",
               placeholder: "Valor do Item",
+              attributes: {
+                inputMode: 'decimal',
+                tabIndex: 3,
+                onKeyUp: handleChange
+              }
             },
           ]}
           buttons={[
@@ -104,22 +133,31 @@ const Tab1: React.FC = () => {
             {
               text: "Ok",
               handler: async (e) => {
-                console.log(e);
+                let value = e.itemPrice;
+
+                value = value.replace(/\./g, "");
+                value = value.replace(/,/g, "");
+                value = value.replace(/(\d)(\d{2})$/, "$1.$2");
+
                 if (e.itemName && e.itemWeigth && e.itemPrice) {
-                  const itemVal = Number(e.itemWeigth) * Number(e.itemPrice);
+
+                  const itemVal = Number(e.itemWeigth) * Number(value);
                   const itemValue = Number(itemVal.toFixed(2));
-                  const newItems = [{ ...e, itemValue }, ...itemList];
+                  const newItems = [{ ...e, itemPrice: value, itemValue }, ...itemList];
+
                   setItemList(newItems);
 
                   settotalValue(totalValue + itemValue);
 
                   setShowToast(true);
 
+
                   set("mainlist", JSON.stringify(newItems));
 
-                  return;
+                } else {
+
+                  setShowToastError(true);
                 }
-                setShowToastError(true);
               },
             },
           ]}
@@ -152,10 +190,9 @@ const Tab1: React.FC = () => {
                     <span>Quant./Kg - </span>
                     {item.itemWeigth}
                     <span>V. Un. - </span>
-                    <strong>R$</strong>
-                    {item.itemPrice}
+                    {formatCurrency(item.itemPrice)}
                     <span>V. Tot. - </span>
-                    <strong>R$</strong> {item.itemValue.toFixed(2)}
+                    {formatCurrency(item.itemValue.toFixed(2))}
                   </IonRow>
                 </IonLabel>
               </IonItem>
@@ -218,7 +255,8 @@ const Tab1: React.FC = () => {
           isOpen={showToast}
           onDidDismiss={() => setShowToast(false)}
           message="Item incluído com SUCESSO"
-          duration={200}
+          duration={500}
+          color="success"
         />
         <IonToast
           isOpen={showToastError}

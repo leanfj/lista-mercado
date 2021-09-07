@@ -2,7 +2,6 @@ import {
   IonContent,
   IonHeader,
   IonPage,
-  IonTitle,
   IonToolbar,
   IonButton,
   IonIcon,
@@ -15,7 +14,6 @@ import {
   IonGrid,
   IonButtons,
   IonBackButton,
-  IonText,
   IonCardTitle
 } from "@ionic/react";
 
@@ -52,9 +50,11 @@ const List: React.FC<ListDetailsPageProps> = ({ match, history }) => {
       const removeMainList = listasString.keys.filter((item) => item !== "mainlist")
 
       const filteredList = removeMainList.filter((item, index) => {
-        if (index == Number(match.params.id)) {
+        if (index === Number(match.params.id)) {
           return item
         }
+
+        return [];
       })
       
       setListName(filteredList[0])
@@ -74,7 +74,7 @@ const List: React.FC<ListDetailsPageProps> = ({ match, history }) => {
 
     };
     loadMainList();
-  }, [get]);
+  }, [get, getKeys, match.params.id]);
 
   return (
     <IonPage>
