@@ -1,21 +1,32 @@
 {
-    "short_name": "Lista Mercado",
+    "theme_color": "#f69435",
+    "background_color": "#f69435",
+    "display": "standalone",
+    "scope": "/",
+    "start_url": "/tab1",
     "name": "Lista Mercado",
+    "short_name": "Lista Mercado",
+    "description": "Um app para listar compras",
     "icons": [
         {
-            "src": "assets/icon/favicon.png",
-            "sizes": "64x64 32x32 24x24 16x16",
-            "type": "image/x-icon"
+            "src": "assets/icon/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
         },
         {
-            "src": "assets/icon/icon.png",
-            "type": "image/png",
+            "src": "assets/icon/icon-256x256.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        },
+        {
+            "src": "assets/icon/icon-384x384.png",
+            "sizes": "384x384",
+            "type": "image/png"
+        },
+        {
+            "src": "assets/icon/icon-512x512.png",
             "sizes": "512x512",
-            "purpose": "maskable"
+            "type": "image/png"
         }
-    ],
-    "start_url": ".",
-    "display": "standalone",
-    "theme_color": "#ffffff",
-    "background_color": "#ffffff"
+    ]
 }
