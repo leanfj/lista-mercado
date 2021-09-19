@@ -17,7 +17,7 @@ import {
   IonCardTitle
 } from "@ionic/react";
 
-import { trash } from "ionicons/icons";
+import { logoWhatsapp , trash } from "ionicons/icons";
 import { useStorage } from "@ionic/react-hooks/storage";
 import React, { useState, useEffect } from "react";
 import "./Tab1.css";
@@ -41,6 +41,21 @@ const List: React.FC<ListDetailsPageProps> = ({ match, history }) => {
   const [listCreatedAt, setListCreateAt] = useState("");
   const [totalValue, settotalValue] = useState(0);
   const { get, remove, getKeys } = useStorage();
+
+  const openSocialSharing = async () => {
+    let windowNavigator: any;
+    windowNavigator = window.navigator;
+
+    const data = itemList.map((item) => {
+      return [`${item.itemName} - ${item.itemWeigth} \n`]
+    }).toString().replace(/,/g, '')
+
+    await windowNavigator.share({
+      title: 'Lista - Compartilhada',
+      text: data,
+      url: '',
+    })
+  }
 
   useEffect(() => {
 
@@ -129,6 +144,14 @@ const List: React.FC<ListDetailsPageProps> = ({ match, history }) => {
             <IonCol >
               <IonButton color="primary" expand="full">
                 {formatCurrency(totalValue.toFixed(2))}
+              </IonButton>
+            </IonCol>
+          </IonRow>
+          <IonRow>
+            <IonCol >
+              <IonButton color="success" expand="full" onClick={openSocialSharing}>
+                <IonIcon slot="end" icon={logoWhatsapp}/>
+                Compartilhar
               </IonButton>
             </IonCol>
           </IonRow>
