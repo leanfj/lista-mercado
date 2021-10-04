@@ -72,6 +72,10 @@ const Tab1: React.FC = () => {
     []
   );
 
+  let refItemName: any
+  let refitemWeigth: any
+  let refitemPrice: any
+
   return (
     <IonPage>
       <IonHeader>
@@ -87,7 +91,11 @@ const Tab1: React.FC = () => {
       <IonContent>
         <IonAlert
           isOpen={showCadNewItem}
-          onDidDismiss={() => setShowCadNewItem(false)}
+          onDidDismiss={(e) => {
+            console.log("onDidDismiss")
+            setShowCadNewItem(false)
+          }}
+         
           header={"Novo Item"}
           inputs={[
             {
@@ -96,17 +104,18 @@ const Tab1: React.FC = () => {
               placeholder: "Nome do Item",
               attributes: {
                 name: "itemName",
-                tabIndex: 1
+                tabIndex: 1,
+                ref: (e: any) => refItemName = e
               }
             },
             {
               name: "itemWeigth",
               type: "number",
               placeholder: "Peso ou Unidade",
-              handler: () => console.log('peso'),
               attributes: {
                 inputMode: 'decimal',
-                tabIndex: 2
+                tabIndex: 2,
+                ref: (e: any) => refitemWeigth = e
               }
             },
             {
@@ -116,7 +125,8 @@ const Tab1: React.FC = () => {
               attributes: {
                 inputMode: 'decimal',
                 tabIndex: 3,
-                onKeyUp: handleChange
+                onKeyUp: handleChange,
+                ref: (e: any) => refitemPrice = e
               }
             },
           ]}
@@ -130,7 +140,8 @@ const Tab1: React.FC = () => {
             },
             {
               text: "Ok",
-              handler: async (e) => {
+              handler: (e) => {
+
                 let value = e.itemPrice;
 
                 value = value.replace(/\./g, "");
@@ -149,11 +160,15 @@ const Tab1: React.FC = () => {
 
                   setShowToast(true);
 
-
                   set("mainlist", JSON.stringify(newItems));
+                  
+                  refItemName.value = ""
+                  refitemWeigth.value = ""
+                  refitemPrice.value = ""
+
+                  return false
 
                 } else {
-
                   setShowToastError(true);
                 }
               },
